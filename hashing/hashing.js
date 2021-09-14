@@ -31,13 +31,72 @@ Blockchain.blocks.push({
 // for (let line of poem) {
 // }
 
-// console.log(`Blockchain is valid: ${verifyChain(Blockchain)}`);
+for (let line of poem) {
+	Blockchain.blocks.push(
+		createBlock(line)
+	)
+}
+
+//console.log(`Blockchain is valid: ${verifyChain(Blockchain)}`);
+
+function createBlock(_data) {
+	let block = {
+		index: Blockchain.blocks.length,
+		prevHash: Blockchain.blocks[Blockchain.blocks.length - 1].hash,
+		data: _data,
+		timestamp: Date.now()
+	}
+	block.hash = blockHash(block);
+	Blockchain.blocks.push(block);
+	console.log(block);
+	return block;
+};
+
+function verifyBlock(bl) {
+
+	// data must be non-empty
+
+	if(bl.data == null) {
+		return false;
+	}
+	// for the genesis block only, the hash must be "000000"
+	if (bl.index === 0) {
+		if (bl.hash !== "000000") {
+			return false;
+		}
+	}
+
+	//prevHash must be non-empty
+
+	if (bl.prevHash == null) {
+		return false;
+	}
+
+	// index must be an integer >= 0
+
+	if (bl.index < 0) {
+		return false;
+	}
+	// the hash must match what recomputing the hash with blockHash(..) produces
+
+};
+
+
+function verifyChain(_blockchain) {
+
+};
+
+
+console.log(`Blockchain is valid: ${verifyChain(Blockchain)}`);
 
 
 // **********************************
 
 function blockHash(bl) {
+	let block = JSON.stringify(bl);
 	return crypto.createHash("sha256").update(
 		// TODO: use block data to calculate hash
+		// `${bl.index};${bl.prevHash};${bl.data};${bl.timestamp}`,
+		block
 	).digest("hex");
 }
